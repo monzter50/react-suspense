@@ -3,15 +3,14 @@
 
 import * as React from 'react'
 // 🐨 you'll also need to get the fetchPokemon function from ../pokemon:
-import {PokemonDataView, fetchPokemon, PokemonInfoFallback ,PokemonErrorBoundary} from '../pokemon'
-import {createResource} from '../utils'
+import {PokemonDataView, fetchPokemon} from '../pokemon'
 
 // 💰 use it like this: fetchPokemon(pokemonName).then(handleSuccess, handleFailure)
 
 // 🐨 create a variable called "pokemon" (using let)
 
 // 💣 delete this now...
-
+let pokemon 
 
 // We don't need the app to be mounted to know that we want to fetch the pokemon
 // named "pikachu" so we can go ahead and do that right here.
@@ -19,13 +18,13 @@ import {createResource} from '../utils'
 
 // 🐨 when the promise resolves, assign the "pokemon" variable to the resolved value
 // 💰 For example: somePromise.then(resolvedValue => (someValue = resolvedValue))
-
-
-const pokemonResource= createResource(fetchPokemon('charizard'))
-
-
+const pokemonPromise = fetchPokemon('charmander').then(pokemonData =>{
+  pokemon = pokemonData
+})
 function PokemonInfo() {
-  const pokemon = pokemonResource.read()
+ if(!pokemon){
+   throw pokemonPromise
+ }
   return (
     <div>
       <div className="pokemon-info__img-wrapper">
@@ -41,12 +40,10 @@ function App() {
     <div className="pokemon-info-app">
       <div className="pokemon-info">
         {/* 🐨 Wrap the PokemonInfo component with a React.Suspense component with a fallback */}
-        <PokemonErrorBoundary>
-          <React.Suspense fallback={<PokemonInfoFallback/>}>
-            <PokemonInfo />
-        </React.Suspense>
-        </PokemonErrorBoundary>
-       
+       <React.Suspense fallback={<div>.....Loading pokemon</div>}>
+       <PokemonInfo />
+
+       </React.Suspense>
       </div>
     </div>
   )

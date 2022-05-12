@@ -21,6 +21,12 @@ function PokemonInfo({pokemonResource}) {
   // place where 🐨 appears
  
 
+
+
+
+  // 💰 This is the same thing the PokemonErrorBoundary renders
+ 
+
   // 💰 this is the part that will suspend
     // 🐨 instead of accepting the pokemonName as a prop to this component
     // you'll accept a pokemonResource.
@@ -48,7 +54,6 @@ function App() {
   React.useEffect(()=>{
     if(!pokemonName){
       setPokemonResource(null)
-      return
     }
     setPokemonResource(createResource(fetchPokemon(pokemonName)))
   },[pokemonName])
@@ -74,7 +79,7 @@ function App() {
           // 📜 https://www.npmjs.com/package/react-error-boundary
           <PokemonErrorBoundary onReset={handleReset} resetKeys={[pokemonResource]}>
             <React.Suspense fallback={<PokemonInfoFallback name={pokemonName}/>}>
-              <PokemonInfo pokemonResource={pokemonResource} />
+              <PokemonInfo pokemonName={pokemonName} />
             </React.Suspense>
           </PokemonErrorBoundary>
           

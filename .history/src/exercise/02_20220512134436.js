@@ -74,7 +74,7 @@ function App() {
           // 📜 https://www.npmjs.com/package/react-error-boundary
           <PokemonErrorBoundary onReset={handleReset} resetKeys={[pokemonResource]}>
             <React.Suspense fallback={<PokemonInfoFallback name={pokemonName}/>}>
-              <PokemonInfo pokemonResource={pokemonResource} />
+              <PokemonInfo pokemonName={pokemonResource} />
             </React.Suspense>
           </PokemonErrorBoundary>
           
