@@ -1,6 +1,5 @@
 // useTransition for improved loading states
 // http://localhost:3000/isolated/exercise/03.js
-
 import * as React from 'react'
 import {
   fetchPokemon,
@@ -26,6 +25,7 @@ function PokemonInfo({pokemonResource}) {
 // 🐨 create a SUSPENSE_CONFIG variable right here and configure timeoutMs to
 // whatever feels right to you, then try it out and tweak it until you're happy
 // with the experience.
+const SUSPENSE_CONFIG = {timeoutMs:4000}
 
 function createPokemonResource(pokemonName) {
   // 🦉 once you've finished the exercise, play around with the delay...
@@ -37,7 +37,7 @@ function createPokemonResource(pokemonName) {
   // delay = 450
 
   // shows busy indicator, then suspense fallback
-  // delay = 5000
+  delay = 5000
 
   // shows busy indicator for a split second
   // 💯 this is what the extra credit improves
@@ -48,17 +48,21 @@ function createPokemonResource(pokemonName) {
 function App() {
   const [pokemonName, setPokemonName] = React.useState('')
   // 🐨 add a useTransition hook here
+  const [startTransition,isPending] = React.useTransition(SUSPENSE_CONFIG)
   const [pokemonResource, setPokemonResource] = React.useState(null)
-
+  console.log({isPending})
   React.useEffect(() => {
     if (!pokemonName) {
       setPokemonResource(null)
       return
     }
     // 🐨 wrap this next line in a startTransition call
-    setPokemonResource(createPokemonResource(pokemonName))
+    startTransition(()=>{
+      setPokemonResource(createPokemonResource(pokemonName))
+
+    })
     // 🐨 add startTransition to the deps list here
-  }, [pokemonName])
+  }, [pokemonName,startTransition])
 
   function handleSubmit(newPokemonName) {
     setPokemonName(newPokemonName)
@@ -76,7 +80,7 @@ function App() {
         🐨 add inline styles here to set the opacity to 0.6 if the
         useTransition above is pending
       */}
-      <div className="pokemon-info">
+      <div className="pokemon-info" style={{opacity: isPending? 0.6: 1}}>
         {pokemonResource ? (
           <PokemonErrorBoundary
             onReset={handleReset}
